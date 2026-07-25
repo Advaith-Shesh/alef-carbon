@@ -10,8 +10,10 @@
  *   @import '@carbon/styles/css/styles.css';
  *   @import './alef/alef-theme.css';
  *
- * Palette source of truth: alef-app/app/globals.css.
- * Dark is the default; light is applied with [data-theme="light"].
+ * The palette is defined HERE. It is no longer a copy of
+ * alef-app/app/globals.css — the product's warm brown-graphite ramp was
+ * rejected for warmth and this file now carries the cool, higher-contrast
+ * neutrals. If the product is ever re-skinned, it follows this file.
  *
  * WHY THIS EXISTS: a plain Carbon fork renders IBM Plex Sans on IBM blue
  * (#0f62fe). That is IBM's identity, not ours. Without this layer every
@@ -38,54 +40,87 @@
 }
 
 /* --------------------------------------------------------------------------
- * 2. PALETTE — dark (default)
- * Warm brown-graphite neutrals with exactly one accent.
+ * 2. PALETTE
+ *
+ * Neutrals are cool graphite: for EVERY neutral token in both themes the red
+ * channel is <= the blue channel, so nothing can throw a brown cast. The
+ * previous ramp was warm brown-graphite (base #171513, borders #2b2723) and
+ * was rejected for warmth; it is gone. The rule is mechanical, not a matter
+ * of taste — if you add a neutral, check R <= B before committing it.
+ *
+ * Contrast is held to measured floors on EVERY surface, not just the base:
+ * primary text >= 12:1, secondary >= 7:1, tertiary and all colour >= 4.5:1.
+ * The worst case is always text on --color-surface-overlay, which is what
+ * those floors are checked against. See alef/README.md for the full table.
+ *
+ * Layer steps are sized in CIE L*, not hex distance. Adjacent surfaces are
+ * >= 4 L* apart (old ramp: ~3), which is what makes the stack read as
+ * separate planes rather than one field of noise.
+ *
+ * Dark is the default; light is applied with [data-theme="light"].
  * ----------------------------------------------------------------------- */
 :root {
-  --color-surface-base: #171513;
-  --color-surface-raised: #1e1b18;
-  --color-surface-raised-2: #25211d;
-  --color-surface-overlay: #2d2823;
-  --color-surface-glass: rgba(23, 21, 19, 0.9);
+  --color-surface-base: #0a0c0f;
+  --color-surface-raised: #14171b;
+  --color-surface-raised-2: #1e2228;
+  --color-surface-overlay: #292e35;
+  --color-surface-glass: rgba(10, 12, 15, 0.9);
 
-  --color-border-subtle: #2b2723;
-  --color-border-default: #3a342e;
-  --color-border-strong: #51483f;
+  --color-border-subtle: #31373f;
+  --color-border-default: #434a54;
+  --color-border-strong: #5f6874;
 
-  --color-text-primary: #f3eee7;
-  --color-text-secondary: #c4bbb0;
-  --color-text-tertiary: #9e958a;
-  --color-text-on-action: #1a1510;
+  --color-text-primary: #f5f7fa;
+  --color-text-secondary: #c9cfd7;
+  --color-text-tertiary: #9ba3ad;
+  --color-text-on-action: #0a0c0f;
 
-  /* THE accent. Ochre. It marks predicted/at-risk values and the primary
-   * action, and nothing else on the surface is coloured. */
+  /* THE accent. Ochre. It marks predicted values and the primary action, and
+   * nothing else on the surface is coloured. The hue is fixed; only its
+   * lightness moves between themes.
+   *
+   * Two tokens, because one cannot do both jobs. -primary is the FILL (a
+   * button background, a chip); -ink is the accent used as ink ON a surface
+   * (a link, the predicted mark). On dark they are the same colour. On light
+   * they cannot be: #d5aa66 as text on a light surface measures 1.95:1 and
+   * is unreadable, which is a bug the warm palette shipped with. */
   --color-action-primary: #d5aa66;
+  --color-action-ink: #d5aa66;
   --color-action-primary-soft: rgba(213, 170, 102, 0.13);
   --color-action-primary-line: rgba(213, 170, 102, 0.48);
 
-  --color-status-critical: #ed7b70;
-  --color-status-positive: #72c59f;
-  --color-status-caution: #e2b562;
+  /* Status. Separated from the accent by measured perceptual distance
+   * (CIEDE2000), not by hue name — see the caution note in the README. */
+  --color-status-critical: #f4776a;
+  --color-status-positive: #5fd3a4;
+  --color-status-caution: #f0904f;
 }
 
 [data-theme='light'] {
-  --color-surface-base: #f3efe8;
-  --color-surface-raised: #fcfaf6;
-  --color-surface-raised-2: #ece6dd;
-  --color-surface-overlay: #e5ddd2;
-  --color-surface-glass: rgba(252, 250, 246, 0.92);
+  --color-surface-base: #f2f4f7;
+  --color-surface-raised: #ffffff;
+  --color-surface-raised-2: #e5e8ec;
+  --color-surface-overlay: #d7dbe1;
+  --color-surface-glass: rgba(255, 255, 255, 0.92);
 
-  --color-border-subtle: #ded7cc;
-  --color-border-default: #cec4b7;
-  --color-border-strong: #b9ac9c;
+  --color-border-subtle: #c8cdd4;
+  --color-border-default: #aeb5be;
+  --color-border-strong: #858d98;
 
-  --color-text-primary: #211d19;
-  --color-text-secondary: #554e47;
-  --color-text-tertiary: #6f675e;
+  --color-text-primary: #0b0d10;
+  --color-text-secondary: #3d444d;
+  --color-text-tertiary: #565d67;
+  --color-text-on-action: #0a0c0f;
 
-  --color-status-critical: #ad392f;
-  --color-status-positive: #246f53;
-  --color-status-caution: #8f641e;
+  /* Fill stays the brand ochre — dark ink on it measures 9.11:1. Ink drops to
+   * the same hue and saturation at L 29% so it clears AA on every light
+   * surface. Hue and saturation are untouched. */
+  --color-action-primary: #d5aa66;
+  --color-action-ink: #745320;
+
+  --color-status-critical: #a3332a;
+  --color-status-positive: #1f654a;
+  --color-status-caution: #8f4a14;
 }
 
 /* --------------------------------------------------------------------------
@@ -119,20 +154,23 @@
   --cds-icon-primary: var(--color-text-primary);
   --cds-icon-secondary: var(--color-text-secondary);
 
-  /* Interactive: ochre replaces #0f62fe everywhere it would have landed. */
-  --cds-interactive: var(--color-action-primary);
-  --cds-link-primary: var(--color-action-primary);
-  --cds-link-primary-hover: var(--color-action-primary);
-  --cds-link-visited: var(--color-action-primary);
-  --cds-focus: var(--color-action-primary);
+  /* Interactive: ochre replaces #0f62fe everywhere it would have landed.
+   * Tokens Carbon paints as INK take --color-action-ink; tokens it paints as
+   * a FILL take --color-action-primary. Getting this backwards is what made
+   * links unreadable in light mode. */
+  --cds-interactive: var(--color-action-ink);
+  --cds-link-primary: var(--color-action-ink);
+  --cds-link-primary-hover: var(--color-action-ink);
+  --cds-link-visited: var(--color-action-ink);
+  --cds-focus: var(--color-action-ink);
   --cds-button-primary: var(--color-action-primary);
   --cds-button-primary-hover: var(--color-action-primary);
   --cds-button-primary-active: var(--color-action-primary);
-  --cds-button-tertiary: var(--color-action-primary);
+  --cds-button-tertiary: var(--color-action-ink);
   --cds-background-selected: var(--color-action-primary-soft);
   --cds-background-selected-hover: var(--color-action-primary-soft);
   --cds-highlight: var(--color-action-primary-soft);
-  --cds-support-info: var(--color-action-primary);
+  --cds-support-info: var(--color-action-ink);
 
   --cds-support-error: var(--color-status-critical);
   --cds-support-success: var(--color-status-positive);
@@ -142,11 +180,42 @@
 /* --------------------------------------------------------------------------
  * 4. REGISTER
  * Alef reads as a precision instrument, not a SaaS dashboard. Hairline rules
- * instead of boxes; no rounding; no shadows; no gradients. These three rules
- * do more for the identity than the palette does.
+ * instead of boxes; no rounding; no shadows; no gradients. These rules do
+ * more for the identity than the palette does.
+ *
+ * RADIUS IS 0, not 2px. A 2px radius on a 1px hairline is not a soft corner;
+ * at normal density it is two or three blended pixels, so it reads as an
+ * anti-aliasing artefact rather than a decision, and it softens exactly the
+ * corners that make a dense layout look measured. Carbon's own default is 0.
+ * With the layer steps now doing the work of separating planes, rounding has
+ * no job left. Set --alef-radius to reintroduce it in one place if needed.
+ *
+ * HAIRLINES STAY 1px. They were hard to see because they were low-contrast
+ * (border-subtle measured 1.23:1 against the base), not because they were
+ * thin. That is fixed in the palette — border-subtle now measures 1.63:1 on
+ * dark and 1.45:1 on light. Thickening them instead would have produced SaaS
+ * dividers. Fix presence with contrast, not weight.
  * ----------------------------------------------------------------------- */
 :root {
-  --alef-radius: 2px;
+  --alef-radius: 0;
+
+  /* The two rule weights. -hairline divides rows inside a dense table;
+   * -rule separates regions. Both are 1px; they differ only in contrast. */
+  --alef-hairline: 1px solid var(--color-border-subtle);
+  --alef-rule: 1px solid var(--color-border-default);
+}
+
+hr,
+.alef-rule {
+  border: 0;
+  border-top: var(--alef-rule);
+  margin: 0;
+}
+
+.alef-hairline {
+  border: 0;
+  border-top: var(--alef-hairline);
+  margin: 0;
 }
 
 .cds--btn,
@@ -215,9 +284,12 @@ h1, h2, h3,
   color: var(--color-text-secondary);
 }
 
-/* Predicted and withheld are the two the reader must never mistake for fact. */
+/* Predicted and withheld are the two the reader must never mistake for fact.
+ * Predicted uses the accent as INK, so it must track --color-action-ink —
+ * with --color-action-primary it measured 1.95:1 in light mode, i.e. the one
+ * mark that must never be missed was the least legible thing on the page. */
 .alef-predicted::before {
-  color: var(--color-action-primary);
+  color: var(--color-action-ink);
 }
 
 .alef-withheld::before {
