@@ -1,0 +1,233 @@
+/*
+ * ALEF THEME — the layer that makes Carbon look like Alef.
+ *
+ * Carbon supplies structure: grid, spacing, component anatomy, interaction
+ * states. It is kept as-is. This file supplies the skin, and it is the ONLY
+ * place Alef's visual identity is defined.
+ *
+ * Load AFTER Carbon's own stylesheet. Nothing here modifies IBM source.
+ *
+ *   @import '@carbon/styles/css/styles.css';
+ *   @import './alef/alef-theme.css';
+ *
+ * Palette source of truth: alef-app/app/globals.css.
+ * Dark is the default; light is applied with [data-theme="light"].
+ *
+ * WHY THIS EXISTS: a plain Carbon fork renders IBM Plex Sans on IBM blue
+ * (#0f62fe). That is IBM's identity, not ours. Without this layer every
+ * generated screen looks like an IBM product.
+ */
+
+/* --------------------------------------------------------------------------
+ * 1. TYPEFACES
+ * Three faces, three jobs. Newsreader carries headlines, Instrument Sans
+ * carries body copy, IBM Plex Mono carries labels and metadata ONLY —
+ * uppercase, wide-tracked, never used for reading text.
+ * ----------------------------------------------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root {
+  --alef-font-display: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --alef-font-body: 'Instrument Sans', system-ui, -apple-system, sans-serif;
+  --alef-font-mono: 'IBM Plex Mono', Menlo, monospace;
+
+  /* Carbon's own type tokens, retargeted. */
+  --cds-font-family-sans: var(--alef-font-body);
+  --cds-font-family-serif: var(--alef-font-display);
+  --cds-font-family-mono: var(--alef-font-mono);
+}
+
+/* --------------------------------------------------------------------------
+ * 2. PALETTE — dark (default)
+ * Warm brown-graphite neutrals with exactly one accent.
+ * ----------------------------------------------------------------------- */
+:root {
+  --color-surface-base: #171513;
+  --color-surface-raised: #1e1b18;
+  --color-surface-raised-2: #25211d;
+  --color-surface-overlay: #2d2823;
+  --color-surface-glass: rgba(23, 21, 19, 0.9);
+
+  --color-border-subtle: #2b2723;
+  --color-border-default: #3a342e;
+  --color-border-strong: #51483f;
+
+  --color-text-primary: #f3eee7;
+  --color-text-secondary: #c4bbb0;
+  --color-text-tertiary: #9e958a;
+  --color-text-on-action: #1a1510;
+
+  /* THE accent. Ochre. It marks predicted/at-risk values and the primary
+   * action, and nothing else on the surface is coloured. */
+  --color-action-primary: #d5aa66;
+  --color-action-primary-soft: rgba(213, 170, 102, 0.13);
+  --color-action-primary-line: rgba(213, 170, 102, 0.48);
+
+  --color-status-critical: #ed7b70;
+  --color-status-positive: #72c59f;
+  --color-status-caution: #e2b562;
+}
+
+[data-theme='light'] {
+  --color-surface-base: #f3efe8;
+  --color-surface-raised: #fcfaf6;
+  --color-surface-raised-2: #ece6dd;
+  --color-surface-overlay: #e5ddd2;
+  --color-surface-glass: rgba(252, 250, 246, 0.92);
+
+  --color-border-subtle: #ded7cc;
+  --color-border-default: #cec4b7;
+  --color-border-strong: #b9ac9c;
+
+  --color-text-primary: #211d19;
+  --color-text-secondary: #554e47;
+  --color-text-tertiary: #6f675e;
+
+  --color-status-critical: #ad392f;
+  --color-status-positive: #246f53;
+  --color-status-caution: #8f641e;
+}
+
+/* --------------------------------------------------------------------------
+ * 3. CARBON TOKEN REMAP
+ * Carbon components read --cds-*. Point those at the Alef palette so stock
+ * components inherit the identity without being forked. This is what stops
+ * IBM blue reaching the screen.
+ * ----------------------------------------------------------------------- */
+:root,
+[data-theme='light'] {
+  --cds-background: var(--color-surface-base);
+  --cds-layer: var(--color-surface-raised);
+  --cds-layer-01: var(--color-surface-raised);
+  --cds-layer-02: var(--color-surface-raised-2);
+  --cds-layer-accent-01: var(--color-surface-overlay);
+  --cds-field: var(--color-surface-raised);
+  --cds-field-01: var(--color-surface-raised);
+
+  --cds-border-subtle: var(--color-border-subtle);
+  --cds-border-subtle-00: var(--color-border-subtle);
+  --cds-border-subtle-01: var(--color-border-subtle);
+  --cds-border-strong: var(--color-border-strong);
+  --cds-border-strong-01: var(--color-border-strong);
+  --cds-border-inverse: var(--color-border-strong);
+
+  --cds-text-primary: var(--color-text-primary);
+  --cds-text-secondary: var(--color-text-secondary);
+  --cds-text-helper: var(--color-text-tertiary);
+  --cds-text-placeholder: var(--color-text-tertiary);
+  --cds-text-on-color: var(--color-text-on-action);
+  --cds-icon-primary: var(--color-text-primary);
+  --cds-icon-secondary: var(--color-text-secondary);
+
+  /* Interactive: ochre replaces #0f62fe everywhere it would have landed. */
+  --cds-interactive: var(--color-action-primary);
+  --cds-link-primary: var(--color-action-primary);
+  --cds-link-primary-hover: var(--color-action-primary);
+  --cds-link-visited: var(--color-action-primary);
+  --cds-focus: var(--color-action-primary);
+  --cds-button-primary: var(--color-action-primary);
+  --cds-button-primary-hover: var(--color-action-primary);
+  --cds-button-primary-active: var(--color-action-primary);
+  --cds-button-tertiary: var(--color-action-primary);
+  --cds-background-selected: var(--color-action-primary-soft);
+  --cds-background-selected-hover: var(--color-action-primary-soft);
+  --cds-highlight: var(--color-action-primary-soft);
+  --cds-support-info: var(--color-action-primary);
+
+  --cds-support-error: var(--color-status-critical);
+  --cds-support-success: var(--color-status-positive);
+  --cds-support-warning: var(--color-status-caution);
+}
+
+/* --------------------------------------------------------------------------
+ * 4. REGISTER
+ * Alef reads as a precision instrument, not a SaaS dashboard. Hairline rules
+ * instead of boxes; no rounding; no shadows; no gradients. These three rules
+ * do more for the identity than the palette does.
+ * ----------------------------------------------------------------------- */
+:root {
+  --alef-radius: 2px;
+}
+
+.cds--btn,
+.cds--text-input,
+.cds--text-area,
+.cds--number input[type='number'],
+.cds--dropdown,
+.cds--list-box,
+.cds--select-input,
+.cds--date-picker__input,
+.cds--tile,
+.cds--modal-container,
+.cds--tooltip-content {
+  border-radius: var(--alef-radius);
+  box-shadow: none;
+}
+
+/* Typography assignment: display face for headings, body face for prose,
+ * mono reserved for labels and metadata. */
+body,
+.cds--body,
+.cds--body-compact-01,
+.cds--body-01,
+.cds--body-02 {
+  font-family: var(--alef-font-body);
+  color: var(--color-text-primary);
+  background: var(--color-surface-base);
+}
+
+h1, h2, h3,
+.cds--heading,
+.cds--productive-heading-05,
+.cds--productive-heading-06,
+.cds--expressive-heading-05,
+.cds--expressive-heading-06 {
+  font-family: var(--alef-font-display);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.cds--label,
+.cds--form__helper-text,
+.cds--tag,
+.alef-label {
+  font-family: var(--alef-font-mono);
+  font-size: 0.6875rem; /* 11px floor — never smaller, at any viewport */
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+}
+
+/* --------------------------------------------------------------------------
+ * 5. EPISTEMIC MARKS
+ * The product's central claim is that it distinguishes what it observed from
+ * what it predicted from what it deliberately did not retrieve. These four
+ * marks carry that distinction and must never be restyled into decoration or
+ * collapsed into a single colour.
+ * ----------------------------------------------------------------------- */
+.alef-observed::before { content: '\25CF'; }   /* ● measured fact */
+.alef-predicted::before { content: '\25C7'; }  /* ◇ modelled, always with confidence */
+.alef-withheld::before { content: '\2298'; }   /* ⊘ deliberately not retrieved */
+.alef-confirmed::before { content: '\2713'; }  /* ✓ outcome confirmed */
+
+.alef-observed::before,
+.alef-confirmed::before {
+  color: var(--color-text-secondary);
+}
+
+/* Predicted and withheld are the two the reader must never mistake for fact. */
+.alef-predicted::before {
+  color: var(--color-action-primary);
+}
+
+.alef-withheld::before {
+  color: var(--color-text-tertiary);
+}
+
+.alef-observed::before,
+.alef-predicted::before,
+.alef-withheld::before,
+.alef-confirmed::before {
+  margin-right: 0.4em;
+  font-size: 0.85em;
+}
